@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pesquisa de Veículos</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/chart.js">
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 20px;
+      background-color: #f9f9f9;
+      color: #333;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    h1 {
+      color: #007BFF;
+      margin-bottom: 20px;
+    }
+
+    label, input, select {
+      margin-bottom: 10px;
+      box-sizing: border-box;
+    }
+
+    button {
+      background-color: #007BFF;
+      color: #908383;
+      padding: 10px 20px;
+      border: none;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+
+    #chartContainer {
+      margin-top: 20px;
+      max-width: 800px;
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .error-message {
+      color: #ff0000;
+      margin-top: 5px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Pesquisa de Veículos</h1>
+
+  <label for="carBrand">Marca:</label>
+  <select id="carBrand">
+    <option value="toyota">Toyota</option>
+    <option value="honda">Honda</option>
+  </select>
+
+  <label for="carModel">Modelo:</label>
+  <input type="text" id="carModel" placeholder="Digite o modelo do veículo">
+
+  <label for="carYear">Ano:</label>
+  <input type="number" id="carYear" placeholder="Digite o ano do veículo">
+
+  <label for="startMonth">Mês Inicial:</label>
+  <select id="startMonth">
+    <option value="0">Jan</option>
+    <option value="1">Feb</option>
+  </select>
+
+  <label for="endMonth">Mês Final:</label>
+  <select id="endMonth">
+    <option value="11">Dec</option>
+  </select>
+
+  <button onclick="searchVehicle()">Pesquisar</button>
+
+  <div id="chartContainer"></div>
+  <div id="errorMessage" class="error-message"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script>
+    function searchVehicle() {
+      const carBrand = document.getElementById('carBrand').value;
+      const carModel = document.getElementById('carModel').value;
+      const carYear = document.getElementById('carYear').value;
+      const startMonth = parseInt(document.getElementById('startMonth').value);
+      const endMonth = parseInt(document.getElementById('endMonth').value);
+
+      if (!carBrand || !carModel || !carYear) {
+        document.getElementById('errorMessage').innerText = 'Preencha todos os campos.';
+        return;
+      }
+
+      document.getElementById('errorMessage').innerText = '';
+
+      const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+      const data = [50, 60, 45, 70, 80, 65, 75, 90, 85, 95, 100, 120];
+
+      const selectedData = data.slice(startMonth, endMonth + 1);
+
+      const ctx = document.getElementById('chartContainer').getContext('2d');
+      new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: months.slice(startMonth, endMonth + 1),
+          datasets: [{
+            label: `${carBrand} ${carModel} (${carYear})`,
+            data: selectedData,
+            borderColor: 'blue',
+            borderWidth: 2,
+            fill: false
+          }]
+        },
+        options: {
+          scales: { y: { beginAtZero: true } }
+        }
+      });
+    }
+  </script>
+</body>
+</html>
